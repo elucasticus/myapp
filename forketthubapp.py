@@ -23,7 +23,7 @@ if sidebar_menu == "Contact us":
     st.sidebar.text("Have you a question about our project?\n\n")
     st.sidebar.text("You can contact us at:\nforkhubofficial@gmail.com\ngiacomodecarlo@mail.polimi.it")
 elif sidebar_menu == "Who we are":
-    st.sidebar.text("Giacomo de Carlo\nLuca Crippa\nMargherita Basilico\nRajaa Bakir")
+    st.sidebar.text("Giacomo\nLuca\nMargherita\nRajaa")
 
 #
 #main page
