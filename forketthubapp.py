@@ -15,7 +15,7 @@ def f(feature1, feature2, feature3, latitude, longitude):
 #
 #sidebar
 #
-st.sidebar.image(img_restaurant, width = 300, caption = "Photo by Jay Wennington, edited by Luca Crippa")
+st.sidebar.image(img_restaurant, width = 300, caption = "Photo by Eleonora Verdelli, edited by Luca Crippa")
 
 #sidebar menu
 sidebar_menu = st.sidebar.selectbox("", ["Who we are", "Forketthub project", "Contact us"])
