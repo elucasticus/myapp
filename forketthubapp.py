@@ -20,7 +20,7 @@ st.sidebar.image(img_restaurant, width = 300, caption = "Photo by Eleonora Verde
 #sidebar menu
 sidebar_menu = st.sidebar.selectbox("", ["Who we are", "Forketthub project", "Contact us"])
 if sidebar_menu == "Contact us":
-    st.sidebar.text("Have you a question about our project?\n\n")
+    st.sidebar.text("Do you have a question about our project?\n\n")
     st.sidebar.text("You can contact us at:\nforkhubofficial@gmail.com\ngiacomodecarlo@mail.polimi.it")
 elif sidebar_menu == "Who we are":
     st.sidebar.text("Giacomo\nLuca\nMargherita\nRajaa")
