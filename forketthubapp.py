@@ -114,7 +114,7 @@ if main_menu == "Place your restaurant":
             pdk.Layer('ScatterplotLayer', data = r_data, get_position='[lng, lat]', get_radius=12.5, get_color='[200, 30, 0, 160]'),
         ]
         ))
-    st.text('Legend:\nBlue dot = submitted position\nRed dot = "there is a restaurant here"')
+    st.text('Blue dot = submitted position\nRed dot = "there is a restaurant here"')
 elif main_menu == "Curiosities":
     # show map with michelin restaurant in blue and normal restaurants in red
     st.pydeck_chart(
@@ -124,7 +124,7 @@ elif main_menu == "Curiosities":
             pdk.Layer('ScatterplotLayer', data = r_data_michelin, get_position='[lng, lat]', get_radius=40, get_color='[200, 30, 0, 160]'),
         ]
         ))
-    st.text('Legend:\nBlue dot = no michelin stars\nRed dot = at least one michelin star')
+    st.text('Blue dot = no michelin stars\nRed dot = at least one michelin star')
     # show map with different colors for restaurants depending on their rating
     st.pydeck_chart(
         pdk.Deck(map_style="mapbox://styles/mapbox/streets-v9", 
@@ -134,7 +134,7 @@ elif main_menu == "Curiosities":
             pdk.Layer('ScatterplotLayer', data = r_data5, get_position='[lng, lat]', get_radius=20, get_color='[0, 200, 30, 160]'),
         ]
         ))
-    st.text('Legend:\nBlue dot = 3 stars\nRed dot = 4 stars\nGreen dot = 5 stars')
+    st.text('Blue dot = 3 stars\nRed dot = 4 stars\nGreen dot = 5 stars')
     # show map with different colors for restaurants depending on their distance from the center of the city
     st.pydeck_chart(
         pdk.Deck(map_style="mapbox://styles/mapbox/streets-v9", 
@@ -143,6 +143,6 @@ elif main_menu == "Curiosities":
             pdk.Layer('ScatterplotLayer', data = r_periferia, get_position='[lng, lat]', get_radius=20, get_color='[200, 30, 0, 160]'),
         ]
         ))
-    st.text('Legend:\nBlue dot = periferic\nRed dot = central')    
+    st.text('Blue dot = periferic\nRed dot = central')    
 elif main_menu == "Data":
     st.text("")
