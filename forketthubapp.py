@@ -58,7 +58,7 @@ elif sidebar_menu == "Who we are":
 ### main page
 ###---------------------------
 
-st.image(img_titolo, width = 300)
+st.image(img_titolo)
 
 # import restaurant coordinates
 r_data = pd.read_csv('coordinateristoranti.csv')
