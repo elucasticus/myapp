@@ -9,6 +9,12 @@ from PIL import Image
 # import images
 img_restaurant = Image.open("restaurant_image.jpg")
 img_titolo = Image.open("titolo.png")
+img_cappella1 = Image.open("cappella1.png")
+img_cappella2 = Image.open("cappella2.png")
+img_cappella3 = Image.open("cappella3.png")
+img_cappella4 = Image.open("cappella4.png")
+img_cappella5 = Image.open("cappella5.png")
+img_cplot = Image.open("cplot.png")
 
 # define functions
 def modellocompleto(distanzaduomo, capitaleiniziale, giorni, livelloprezzo, dipendenti, indipendenti, michelin):
@@ -53,6 +59,8 @@ if sidebar_menu == "Contact us":
     st.sidebar.text("You can contact us at:\nforkhubofficial@gmail.com\ngiacomodecarlo@mail.polimi.it")
 elif sidebar_menu == "Who we are":
     st.sidebar.text("Giacomo De Carlo \nLuca Crippa\nMargherita Basilico\nRajaa Bakir")
+elif sidebar_menu == "Forketthub project":
+    st.sidebar.text("The goal of the project is to find \na model capable of predicting the \nrevenue of a restaurant in Milan \nbased on the data of a thousand \nother businesses running in the city")
 
 ###---------------------------
 ### main page
@@ -94,8 +102,11 @@ df = pd.DataFrame()
 df.at[1, 'lat'] = 45.4641
 df.at[1, 'lng'] = 9.1919
 
-# main menu
-main_menu = st.selectbox("", ["Place your restaurant", "Curiosities", "Data"])
+### MAIN MENU
+###---------------------------
+### model
+###---------------------------
+main_menu = st.selectbox("", ["Place your restaurant", "Curiosities", "Competition index"])
 if main_menu == "Place your restaurant":
 
     # submit and geocode location
@@ -104,6 +115,13 @@ if main_menu == "Place your restaurant":
     livelloprezzo = int(livelloprezzo)
     capitaleiniziale = st.text_input('Share capital', value = 0.)
     capitaleiniziale = float(capitaleiniziale)
+    giorni = st.text_input('Days from start (only for the complete model)', value = 0)
+    giorni = int(giorni)
+    dipendenti = st.text_input('Number of employees (only for the complete model', value = 0)
+    dipendenti = int(dipendenti)
+    indipendenti = st.text_input('Number of founders: (only for the complete model)', value = 0)
+    indipendenti = int(indipendenti)
+    michelin = st.checkbox('Any michelin star? (only for the complete model)')
 
     if st.button("Submit"):
         g = geocoder.osm(location)
@@ -116,8 +134,10 @@ if main_menu == "Place your restaurant":
             duomo = (45.4641, 9.1919)
             distanzadalduomo = hs.haversine(currentlocation, duomo)*1000
             fatturatoridotto = modelloridotto(distanzadalduomo, capitaleiniziale, 0., livelloprezzo, kerneldistanceconst)
+            fatturatocompleto= modellocompleto(distanzadalduomo, capitaleiniziale, giorni, livelloprezzo, dipendenti, indipendenti, michelin)
             alpha = 0.1
             st.success(str(fatturatoridotto*(1 - alpha)) + ', ' + str(fatturatoridotto*(1+alpha)))
+            st.success(str(fatturatocompleto*(1 - alpha)) + ', ' + str(fatturatocompleto*(1+alpha)))
         else:
             st.error("Location not found")
 
@@ -130,6 +150,9 @@ if main_menu == "Place your restaurant":
         ]
         ))
     st.text('Blue dot = submitted position\nRed dot = "there is a restaurant here"')
+###---------------------------
+### curiosities
+###---------------------------
 elif main_menu == "Curiosities":
     # show map with michelin restaurant in blue and normal restaurants in red
     st.pydeck_chart(
@@ -165,6 +188,24 @@ elif main_menu == "Curiosities":
         ))
     st.text('Blue dot = 3 stars\nRed dot = 4 stars\nGreen dot = 5 stars')
     st.write('Another interesting ANOVA test is ratings ~ iscenter. It shows us that the mean of the ratings for the restaurants in the suburbs is not different from the one of restaurants in the center, even though like we have showed above there is a difference in the mean revenues. The rating is not a measure of the size of the business but is related with quality and subjective factors which are similar for the suburbs and the centre and that we cannot inspect with our database.')
-
-elif main_menu == "Data":
-    st.text("")
+###---------------------------
+### Gaussian kernel competition index
+###---------------------------
+elif main_menu == "Competition index":
+    st.header('Gaussian kernel competition index')
+    st.write('We need an index that works in a simple way: fixing a location, the value of the index is low if there are few restaurants in its neighborhood and vice versa.')
+    st.write('The idea is to just put on every restaurant a “bell” which represents the influence each one has on all the others.')
+    st.image(img_cappella1)
+    st.write('We can vary a parameter (sigma) to decide how far the influence of each restaurant goes, thus varying the shape of our bell. If we increase sigma we get a larger bell and the influence of each restaurant expands:')
+    st.image(img_cappella2)
+    st.write('If we reduce sigma, we obviously get a smaller bell:')
+    st.image(img_cappella3)
+    st.write('We decided to set sigma in two different ways creating different features for our analysis:')
+    st.write('1) We set a constant sigma such that being 500m away from a restaurant would mean having only 10% of the influence of it.')
+    st.write('2) 2.	We set a sigma parameter that linearly varies with reference to the distance from the Duomo di Milano such that when we are close to the Cathedral 10% of the influence is achieved at just 200m of distance.')
+    st.write('Here is an exemple with two restaurants:')
+    st.image(img_cappella4)
+    st.write('And with three:')
+    st.image(img_cappella5)
+    st.write('Contour plot with all the restaurants:')
+    st.image(img_cplot)
