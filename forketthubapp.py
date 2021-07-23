@@ -60,7 +60,7 @@ if sidebar_menu == "Contact us":
 elif sidebar_menu == "Who we are":
     st.sidebar.text("Giacomo De Carlo \nLuca Crippa\nMargherita Basilico\nRajaa Bakir")
 elif sidebar_menu == "Forketthub project":
-    st.sidebar.text("The goal of the project is to find \na model capable of predicting the \nrevenue of a restaurant in Milan \nbased on the data of a thousand \nother businesses running in the city")
+    st.sidebar.text("The goal of the project is to find \na model capable of predicting the \nrevenue of a restaurant in Milan \nbased on the data of a thousand \nother businesses running in the city.")
 
 ###---------------------------
 ### main page
