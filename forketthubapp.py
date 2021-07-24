@@ -161,9 +161,9 @@ if main_menu == "Place your restaurant":
             fatturatoridotto = modelloridotto(distanzadalduomo, capitaleiniziale, 0., livelloprezzo, kerneldistanceconst)
             fatturatocompleto= modellocompleto(distanzadalduomo, capitaleiniziale, giorni, livelloprezzo, dipendenti, indipendenti, michelin)
             alpha = 0.45
-            st.success('Second model: net income ∈ [' + str(int(fatturatoridotto*(1 - alpha))) + ', ' + str(int(fatturatoridotto*(1+alpha))) + ']')
-            alpha = 0.15
             st.success('First model: net income ∈ [' + str(int(fatturatocompleto*(1 - alpha))) + ', ' + str(int(fatturatocompleto*(1+alpha))) + ']')
+            alpha = 0.15
+            st.success('Second model: net income ∈ [' + str(int(fatturatoridotto*(1 - alpha))) + ', ' + str(int(fatturatoridotto*(1+alpha))) + ']')
         else:
             st.error("Location not found")
 
