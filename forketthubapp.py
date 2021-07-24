@@ -120,7 +120,7 @@ df.at[1, 'lng'] = 9.1919
 ###---------------------------
 main_menu = st.selectbox("", ["Place your restaurant", "Curiosities", "Competition index"])
 if main_menu == "Place your restaurant":
-
+    st.header('Our models')
     st.write('Here you can find and play with two different models to predict the revenue of a restaurant')
     st.write('The first is a very accurate and interpretable model for the prediction of the income of a restaurant. The best use of this is to predict the revenue of an already existing restaurant since most of the variables are unknown at the opening of the business. It’s very robust with only few outliers in the predictors.')
     st.image(img_modellolineare1)
@@ -180,6 +180,7 @@ if main_menu == "Place your restaurant":
 ### curiosities
 ###---------------------------
 elif main_menu == "Curiosities":
+    st.header('ANOVA tests')
     # show map with michelin restaurant in blue and normal restaurants in red
     st.pydeck_chart(
         pdk.Deck(map_style="mapbox://styles/mapbox/streets-v9", 
