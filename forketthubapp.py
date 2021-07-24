@@ -15,6 +15,10 @@ img_cappella3 = Image.open("cappella3.png")
 img_cappella4 = Image.open("cappella4.png")
 img_cappella5 = Image.open("cappella5.png")
 img_cplot = Image.open("cplot.png")
+img_anova1 = Image.open("anova1.png")
+img_anova2 = Image.open("anova2.png")
+img_anova3 = Image.open("anova3.png")
+img_anova4 = Image.open("anova4.png")
 
 # define functions
 def modellocompleto(distanzaduomo, capitaleiniziale, giorni, livelloprezzo, dipendenti, indipendenti, michelin):
@@ -94,6 +98,9 @@ r_centro = pd.read_csv('coordinatecentro.csv')
 r_centro.columns = ['lat', 'lng']
 r_periferia = pd.read_csv('coordinateperiferia.csv')
 r_periferia.columns = ['lat', 'lng']
+r_mezzo = pd.read_csv('coordinatemezzo.csv')
+r_mezzo.columns = ['lat', 'lng']
+
 
 
 
@@ -162,9 +169,11 @@ elif main_menu == "Curiosities":
             pdk.Layer('ScatterplotLayer', data = r_data_michelin, get_position='[lng, lat]', get_radius=40, get_color='[200, 30, 0, 160]'),
         ]
         ))
-    st.text('Blue dot = no michelin stars\nRed dot = at least one michelin star')
+    st.text('Blue dot = no Michelin stars\nRed dot = at least one Michelin star')
     st.write('The ANOVA test Ricavi  ~ Michelin aims at investigating differences of revenues between the Michelin-starred restaurants in Milan and the others. There is statistical evidence of a difference in the mean of the two groups, and the starred restaurants turn out to have higher mean revenue. This can be explained with the fact that such types of restaurants usually make bigger investments, have more workers and have a high level of price of the menu, so there is a large turnover.')
-    st.write('Things change when we inspect the variable “Utile o perdite” which represents the profit. The ANOVA tests shows that there isn’t a significant difference in the mean of the profit of the two categories of restaurants (starred and not). Like we said, starred restaurants may be big or with a large turnover but in the end, they also have a lot of expenses (expert cooks, quality of the food…) and so the gain is not different from the other structures.')
+    st.image(img_anova1)
+    st.write('Things change when we inspect the variable “Utile o perdite” which represents the profit. The ANOVA tests shows that there isn’t a significant difference in the mean of the profit of the two categories of restaurants (starred and not). Like we said, starred restaurants may be big or with a large turnover but in the end, they also have a lot of expenses (skilled chefs, quality of the food…) and the gain is not different from the other structures.')
+    st.image(img_anova2)
     
     # show map with different colors for restaurants depending on their distance from the center of the city
     st.pydeck_chart(
@@ -172,10 +181,12 @@ elif main_menu == "Curiosities":
         initial_view_state={"latitude": df.at[1, 'lat'], "longitude": df.at[1, 'lng'], "zoom": 12.5, "pitch": 0}, layers=[
             pdk.Layer('ScatterplotLayer', data = r_centro, get_position='[lng, lat]', get_color='[30, 0, 200, 160]', get_radius=20,),
             pdk.Layer('ScatterplotLayer', data = r_periferia, get_position='[lng, lat]', get_radius=20, get_color='[200, 30, 0, 160]'),
+            pdk.Layer('ScatterplotLayer', data = r_mezzo, get_position='[lng, lat]', get_radius=20, get_color='[0, 200, 30, 160]'),
         ]
         ))
-    st.text('Blue dot = periferic\nRed dot = central')
-    st.write('We may want to highlight the role of the position over the revenues from a categorical point of view. We have created a variable iscenter which values are “periferia” (suburbs) for the places which are more than 1km distant from the centre, which we identify with the Milan Cathedral, and “centro” (centre) for the others. The place situated near the centre have higher mean revenues, in fact they are the most visited from tourists and office workers and they are usually more expensive, so they have large incomings.')
+    st.text('Blue dot = centre\nRed dot = suburbs\nGreen dot = middle')
+    st.write('We may want to highlight the role of the position over the revenues from a categorical point of view. We have created a variable which values are “suburbs” for the places more than three kilometres distant from the centre, which we identify with the Milan Cathedral, “middle” for restaurants with intermediate distance (between one and three kilometres from the Cathedral) and “centre” for the others. Three kilometres from the cathedral is approximately the radius of the ring road of Milan.  The places situated near the centre have higher mean revenues, since they are the most visited from tourists and office workers and they are usually more expensive, so they have large incomings. The difference in the mean revenues is not very significant when we analyse the groups “suburbs” and “middle”.')
+    st.image(img_anova3)
 
     # show map with different colors for restaurants depending on their rating
     st.pydeck_chart(
@@ -187,7 +198,9 @@ elif main_menu == "Curiosities":
         ]
         ))
     st.text('Blue dot = 3 stars\nRed dot = 4 stars\nGreen dot = 5 stars')
-    st.write('Another interesting ANOVA test is ratings ~ iscenter. It shows us that the mean of the ratings for the restaurants in the suburbs is not different from the one of restaurants in the center, even though like we have showed above there is a difference in the mean revenues. The rating is not a measure of the size of the business but is related with quality and subjective factors which are similar for the suburbs and the centre and that we cannot inspect with our database.')
+    st.write('Another interesting ANOVA test is ratings ~ iscenter. It shows us that the mean of the ratings for the restaurants in one zone is not different from the one of restaurants in the others, even though there is a difference in the mean revenues. The rating is not a measure of the size of the business but is related with quality and subjective factors which are similar for the suburbs, for the middle and for the centre and that we cannot inspect with our database.')
+    st.image(img_anova4)
+
 ###---------------------------
 ### Gaussian kernel competition index
 ###---------------------------
@@ -202,7 +215,7 @@ elif main_menu == "Competition index":
     st.image(img_cappella3)
     st.write('We decided to set sigma in two different ways creating different features for our analysis:')
     st.write('1) We set a constant sigma such that being 500m away from a restaurant would mean having only 10% of the influence of it.')
-    st.write('2) 2.	We set a sigma parameter that linearly varies with reference to the distance from the Duomo di Milano such that when we are close to the Cathedral 10% of the influence is achieved at just 200m of distance.')
+    st.write('2) 2.	We set a sigma parameter that linearly varies with reference to the distance from the Duomo di Milano such that when we are close to the Cathedral, 10% of the influence is achieved at just 200m of distance.')
     st.write('Here is an exemple with two restaurants:')
     st.image(img_cappella4)
     st.write('And with three:')
