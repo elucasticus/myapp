@@ -184,7 +184,6 @@ if main_menu == "Place your restaurant":
     st.image(img_modellolineare4)
     st.write(
         'We estimated (through LOO Cross Validation) an interval of this form with  α=0.431 would contain the real value 89% of the times. R^2=0.56')
-    st.write('Here you can fit the models with your data and find the best position to open your own restaurant')
 
 ###---------------------------
 ### curiosities
