@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import pydeck as pdk
@@ -5,10 +6,9 @@ import geocoder
 import math
 import haversine as hs
 from PIL import Image
-
 # import images
-img_restaurant = Image.open("restaurant_image.jpg")
 img_titolo = Image.open("titolo.png")
+img_restaurant = Image.open("restaurant_image.jpg")
 img_cappella1 = Image.open("cappella1.png")
 img_cappella2 = Image.open("cappella2.png")
 img_cappella3 = Image.open("cappella3.png")
@@ -120,34 +120,21 @@ df.at[1, 'lng'] = 9.1919
 ###---------------------------
 main_menu = st.selectbox("", ["Place your restaurant", "Curiosities", "Competition index"])
 if main_menu == "Place your restaurant":
-    st.header('Our models')
-    st.write('Here you can find and play with two different models to predict the revenue of a restaurant')
-    st.write('The first is a very accurate and interpretable model for the prediction of the income of a restaurant. The best use of this is to predict the revenue of an already existing restaurant since most of the variables are unknown at the opening of the business. It’s very robust with only few outliers in the predictors.')
-    st.image(img_modellolineare1)
-    st.write('The prediction interval will be in the form:')
-    st.image(img_modellolineare2)
-    st.write('We estimated (through LOO Cross Validation) an interval of this form with  α=0.143 would contain the real value 93% of the times and the parameters are estimated through OLS. R^2=0.86')
-    st.write('The second quit robust model is intended to be used to predict the revenue of a restaurant someone intend to open.')
-    st.image(img_modellolineare3)
-    st.write('The prediction interval will be in the form:')
-    st.image(img_modellolineare4)
-    st.write('We estimated (through LOO Cross Validation) an interval of this form with  α=0.431 would contain the real value 89% of the times. R^2=0.56')
-    st.write('Here you can fit the models with your data and find the best position to open your own restaurant')
 
     # submit and geocode location
     location = st.text_input('Insert your location here (default position: "Milan Cathedral, Milan")')
-    livelloprezzo = st.slider("Price level", 1, 4)
+    livelloprezzo = st.slider("Price level (1=Not expensive, 2 , 3 , 4=Very Expensive)", 1, 4)
     livelloprezzo = int(livelloprezzo)
-    capitaleiniziale = st.text_input('Share capital', value = 0.)
+    capitaleiniziale = st.text_input('Share capital (starting capital of the restaurant in €)', value = 0.)
     capitaleiniziale = float(capitaleiniziale)
-    giorni = st.text_input('Days from start (only for the complete model)', value = 0)
+    giorni = st.text_input('Days from the start (only for the complete model)', value = 0)
     giorni = int(giorni)
-    dipendenti = st.text_input('Number of employees (only for the complete model', value = 0)
+    dipendenti = st.text_input('Number of employees: (only for the complete model)', value = 0)
     dipendenti = int(dipendenti)
     indipendenti = st.text_input('Number of founders: (only for the complete model)', value = 0)
     indipendenti = int(indipendenti)
     michelin = st.checkbox('Any michelin star? (only for the complete model)')
-    
+
     if st.button("Submit"):
         g = geocoder.osm(location)
         if g.ok:
@@ -160,12 +147,16 @@ if main_menu == "Place your restaurant":
             distanzadalduomo = hs.haversine(currentlocation, duomo)*1000
             fatturatoridotto = modelloridotto(distanzadalduomo, capitaleiniziale, 0., livelloprezzo, kerneldistanceconst)
             fatturatocompleto= modellocompleto(distanzadalduomo, capitaleiniziale, giorni, livelloprezzo, dipendenti, indipendenti, michelin)
-            alpha = 0.45
-            st.success('First model: revenue ∈ [' + str(int(fatturatocompleto*(1 - alpha))) + ', ' + str(int(fatturatocompleto*(1+alpha))) + ']')
             alpha = 0.15
-            st.success('Second model: revenue ∈ [' + str(int(fatturatoridotto*(1 - alpha))) + ', ' + str(int(fatturatoridotto*(1+alpha))) + ']')
+            if distanzadalduomo < 10000:
+                st.success('Complete model: revenue ∈ [' + str(int(fatturatocompleto*(1 - alpha))) + ', ' + str(int(fatturatocompleto*(1+alpha))) + ']')
+                alpha = 0.45
+                st.success('Reduced model: revenue ∈ [' + str(int(fatturatoridotto*(1 - alpha))) + ', ' + str(int(fatturatoridotto*(1+alpha))) + ']')
+            else:
+                st.error("Location must not be more than 10 km away from the city center")
         else:
             st.error("Location not found")
+
 
     # show map with submitted location in blue and all real restaurants in red
     st.pydeck_chart(
@@ -176,6 +167,25 @@ if main_menu == "Place your restaurant":
         ]
         ))
     st.text('Blue dot = submitted position\nRed dot = "there is a restaurant here"')
+
+    st.header('Our models')
+    st.write('Here you can find and play with two different models to predict the revenue of a restaurant')
+    st.write(
+        'The first is a very accurate and interpretable model for the prediction of the income of a restaurant. The best use of this is to predict the revenue of an already existing restaurant since most of the variables are unknown at the opening of the business. It’s very robust with only few outliers in the predictors.')
+    st.image(img_modellolineare1)
+    st.write('The prediction interval will be in the form:')
+    st.image(img_modellolineare2)
+    st.write(
+        'We estimated (through LOO Cross Validation) an interval of this form with  α=0.143 would contain the real value 93% of the times and the parameters are estimated through OLS. R^2=0.86')
+    st.write(
+        'The second model (Reduced model for the revenue) is intended to be used to predict the revenue of a restaurant someone wants to open. Only variables that are supposed to be know when starting the business are used.')
+    st.image(img_modellolineare3)
+    st.write('The prediction interval will be in the form:')
+    st.image(img_modellolineare4)
+    st.write(
+        'We estimated (through LOO Cross Validation) an interval of this form with  α=0.431 would contain the real value 89% of the times. R^2=0.56')
+    st.write('Here you can fit the models with your data and find the best position to open your own restaurant')
+
 ###---------------------------
 ### curiosities
 ###---------------------------
@@ -239,8 +249,8 @@ elif main_menu == "Competition index":
     st.image(img_cappella3)
     st.write('We decided to set sigma in two different ways creating different features for our analysis:')
     st.write('1) We set a constant sigma such that being 500m away from a restaurant would mean having only 10% of the influence of it.')
-    st.write('2) 2.	We set a sigma parameter that linearly varies with reference to the distance from the Duomo di Milano such that when we are close to the Cathedral, 10% of the influence is achieved at just 200m of distance.')
-    st.write('Here is an exemple with two restaurants:')
+    st.write('2) We set a sigma parameter that linearly varies with reference to the distance from the Duomo di Milano such that when we are close to the Cathedral, 10% of the influence is achieved at just 200m of distance.')
+    st.write('Here is an example with two restaurants:')
     st.image(img_cappella4)
     st.write('And with three:')
     st.image(img_cappella5)
